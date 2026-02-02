@@ -7,8 +7,7 @@ from __future__ import annotations
 
 import os
 
-os.environ["OMP_NUM_THREADS"] = "1"
-
+os.environ["OMP_NUM_THREADS"] = "1"  # TODO: test 
 import torch
 
 torch.set_float32_matmul_precision("high")
@@ -187,7 +186,7 @@ class Workspace:
         expert_buffer = load_expert_trajectories(self.cfg.motions, self.cfg.motions_root, device=self.cfg.buffer_device, sequence_length=self.agent_cfg.model.seq_length)
 
         print("Creating the training environment")
-        train_env, mp_info = make_humenv(
+        train_env, mp_info = make_humenv(  # TODO: check train_env itself
             num_envs=self.cfg.online_parallel_envs,
             # vectorization_mode="sync",
             wrappers=[
