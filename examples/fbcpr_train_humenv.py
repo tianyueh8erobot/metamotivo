@@ -210,12 +210,13 @@ class Workspace:
         print("Starting training")
         progb = tqdm(total=self.cfg.num_env_steps)
         td, info = train_env.reset()
-        done = np.zeros(self.cfg.online_parallel_envs, dtype=np.bool)
+        done = np.zeros(self.cfg.online_parallel_envs, dtype=bool)  # Fixed: np.bool -> bool for NumPy compatibility
         total_metrics, context = None, None
         start_time = time.time()
         fps_start_time = time.time()
         for t in range(0, self.cfg.num_env_steps, self.cfg.online_parallel_envs):
-            if self.cfg.evaluate and t % self.cfg.eval_every_steps == 0:
+            # Skip evaluation at t=0 for faster debugging
+            if self.cfg.evaluate and t > 0 and t % self.cfg.eval_every_steps == 0:
                 eval_metrics = self.eval(t, replay_buffer=replay_buffer)
                 if self.cfg.prioritization:
                     # priorities
